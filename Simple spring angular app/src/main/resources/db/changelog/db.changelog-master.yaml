@@ -1,5 +1,8 @@
 databaseChangeLog:
   - logicalFilePath: db/changelog/db.changelog-master.yaml
+
+
+
   - changeSet:
       id: 1
       author: java
@@ -26,73 +29,15 @@ databaseChangeLog:
                   constraints:
                     unique: false
                     nullable: false
+              - column:
+                  name: password
+                  type: varchar(60)
+                  constraints:
+                    unique: false
+                    nullable: false
+
   - changeSet:
       id: 2
-      author: java
-      comment: "init changes"
-      changes:
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: id
-                  value: "1"
-              - column:
-                  name: name
-                  value: "John"
-              - column:
-                  name: email
-                  value: "John@domain.com"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: id
-                  value: "2"
-              - column:
-                  name: name
-                  value: "Julie"
-              - column:
-                  name: email
-                  value: "Julie@domain.com"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: id
-                  value: "3"
-              - column:
-                  name: name
-                  value: "Jennifer"
-              - column:
-                  name: email
-                  value: "Jennifer@domain.com"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: id
-                  value: "4"
-              - column:
-                  name: name
-                  value: "Helen"
-              - column:
-                  name: email
-                  value: "Helen@domain.com"
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: id
-                  value: "5"
-              - column:
-                  name: name
-                  value: "Rachel"
-              - column:
-                  name: email
-                  value: "Rachel@domain.com"
-  - changeSet:
-      id: 3
       author: java
       changes:
         - createTable:
@@ -111,17 +56,49 @@ databaseChangeLog:
                   constraints:
                     unique: false
                     nullable: false
+
+  - changeSet:
+      id: 3
+      author: java
+      changes:
+        - createTable:
+            tableName: user_role
+            columns:
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    references:
+                      - referencedTableName: users
+                      - referencedColumnNames: id
+              - column:
+                  name: role_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    references:
+                      - referencedTableName: roles
+                      - referencedColumnNames: id
+
   - changeSet:
       id: 4
       author: java
-      comment: "init roles"
+      changes:
+        - addUniqueConstraint:
+            tableName: user_role
+            columnNames: user_id, role_id
+            constraintName: user_role_constr
+
+  - changeSet:
+      id: 5
+      author: java
+      comment: "insert user roles"
       changes:
         - insert:
             tableName: roles
             columns:
-              - column:
-                  name: id
-                  value: "1"
               - column:
                   name: name
                   value: "ROLE_USER"
@@ -129,17 +106,44 @@ databaseChangeLog:
             tableName: roles
             columns:
               - column:
-                  name: id
-                  value: "2"
-              - column:
                   name: name
                   value: "ROLE_MODERATOR"
         - insert:
             tableName: roles
             columns:
               - column:
-                  name: id
-                  value: "3"
-              - column:
                   name: name
                   value: "ROLE_ADMIN"
+
+  - changeSet:
+      id: 6
+      author: java
+      comment: "create admin record"
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: name
+                  value: "admin"
+              - column:
+                  name: email
+                  value: "admin@admin.com"
+              - column:
+                  name: password
+                  value: "$2a$10$l6ZOGRkCJhgAqCSSl2gEoOehXONlHNfZRlHCj288fx4KqDwGByAFi"
+
+  - changeSet:
+      id: 7
+      author: java
+      comment: "create admin record"
+      changes:
+        - insert:
+            tableName: user_role
+            columns:
+              - column:
+                  name: user_id
+                  valueComputed: "SELECT id FROM users WHERE name='admin'"
+              - column:
+                  name: role_id
+                  valueComputed: "SELECT id FROM roles WHERE name='ROLE_ADMIN'"

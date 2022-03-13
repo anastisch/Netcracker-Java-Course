@@ -1,9 +1,8 @@
-package com.github.nazzrrg.simplespringangularapp.controller;
+package com.github.nazzrrg.simplespringangularapp.service;
 
-import com.github.nazzrrg.simplespringangularapp.repo.UserRepository;
 import com.github.nazzrrg.simplespringangularapp.model.User;
+import com.github.nazzrrg.simplespringangularapp.repo.UserRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    void create(@RequestBody User user) {
+    public void create(User user) {
         userRepository.save(user);
     }
 

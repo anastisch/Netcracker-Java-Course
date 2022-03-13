@@ -1,7 +1,7 @@
 package com.github.nazzrrg.simplespringangularapp.controller;
 
 import com.github.nazzrrg.simplespringangularapp.model.User;
-import com.github.nazzrrg.simplespringangularapp.controller.UserService;
+import com.github.nazzrrg.simplespringangularapp.service.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
